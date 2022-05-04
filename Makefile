@@ -6,3 +6,6 @@ deploy:
 
 invoke:
 	sls invoke local --function selector
+
+offline:
+	sls offline start

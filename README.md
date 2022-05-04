@@ -2,14 +2,26 @@
 
 ## Quick Start
 
-1. Compile function
+1. Install modules
+
+```
+$ npm install
+```
+
+2. Compile function
 
 ```
 $ make build
 ```
 
-2. Deploy!
+3. Deploy!
 
 ```
 $ make deploy
+```
+
+## Development at local
+
+```
+$ make offline
 ```
