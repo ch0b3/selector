@@ -13,3 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+bin
+
+# Serverless directories
+.serverless
+node_modules
