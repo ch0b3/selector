@@ -1,16 +1,15 @@
 package main
 
 import (
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type Response struct {
-	Message string `json:"message"`
-}
-
-func Handler() (Response, error) {
-	return Response{
-		Message: "Go Serverless v1.0! Your function executed successfully!",
+// Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
+func Handler(request events.LambdaFunctionURLRequest) (events.LambdaFunctionURLResponse, error) {
+	return events.LambdaFunctionURLResponse{
+		StatusCode: 200,
+		Body: "OK",
 	}, nil
 }
 

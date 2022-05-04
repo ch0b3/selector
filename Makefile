@@ -5,7 +5,7 @@ deploy:
 	sls deploy --verbose
 
 invoke:
-	sls invoke local --function selector
+	sls invoke local --function selector --path event.json
 
 offline:
 	sls offline start
