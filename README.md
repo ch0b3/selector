@@ -1,5 +1,10 @@
 # Selector
 
+# Versions
+
+- Go: 1.18.1
+- Serverless framework: 3.16.0
+
 ## Quick Start
 
 1. Install modules
