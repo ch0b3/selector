@@ -36,7 +36,13 @@ package:
 functions:
   selector:
     handler: bin/main
-    url: true
+    events:
+      - http: 'POST /'
+    # url: true
 
 plugins:
   - serverless-offline
+
+custom:
+  serverless-offline:
+    useDocker: true
