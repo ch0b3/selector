@@ -27,6 +27,14 @@ $ make deploy
 
 ## Development at local
 
+1. Fix function
+
+2. Compile function
+```
+$ make build
+```
+
+3. start offline mode
 ```
 $ make offline
 ```
