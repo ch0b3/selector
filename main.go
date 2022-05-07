@@ -2,10 +2,12 @@ package main
 
 import (
 	"log"
+	"math/rand"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -21,14 +23,16 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	log.Println(str_body)
 
 	text := filter_text(str_body)
-	log.Println(text)
 
 	params := text_to_struct(text)
 	log.Println(params)
 
+	selected := select_by_count(&params)
+	log.Println(selected)
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       "ok",
+		Body:       strings.Join(selected, "\n"),
 	}, nil
 }
 
@@ -82,16 +86,13 @@ func text_to_struct(text string) Params {
 		s = strings.ReplaceAll(s, ">", "")
 		response.members = append(response.members, s)
 	}
-	log.Println(response.members)
 
 	// membersを削る
 	text = rep.ReplaceAllString(text, "")
 	text = strings.TrimSpace(text)
-	log.Println(text)
 
 	// 残りを半角文字で区切る
 	texts := strings.Split(text, " ")
-	log.Println(texts)
 
 	// TODO: エラーハンドリング
 	if num, err := strconv.Atoi(texts[0]); err == nil {
@@ -99,4 +100,19 @@ func text_to_struct(text string) Params {
 	}
 
 	return response
+}
+
+func select_by_count(params *Params) []string {
+	selected := make([]string, 0)
+
+	for i := 0; i < params.count; i++ {
+		rand.Seed(time.Now().UnixNano())
+		i := rand.Intn(len(params.members))
+
+		selected = append(selected, params.members[i])
+		// 選ばれたものはmembersから削除する
+		params.members = append(params.members[:i], params.members[i+1:]...)
+	}
+
+	return selected
 }
