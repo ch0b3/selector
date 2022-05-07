@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"net/url"
-	"strings"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -68,7 +68,7 @@ var rep = regexp.MustCompile(`\<.*?\>`)
 
 type Params struct {
 	members []string
-	count int
+	count   int
 }
 
 func text_to_struct(text string) Params {
