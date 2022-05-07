@@ -77,7 +77,10 @@ func text_to_struct(text string) Params {
 	// <>があったら中を取り出す
 	results := rep.FindAllStringSubmatch(text, -1)
 	for _, member := range results {
-		response.members = append(response.members, member[0])
+		// <>を削除
+		s := strings.ReplaceAll(member[0], "<", "")
+		s = strings.ReplaceAll(s, ">", "")
+		response.members = append(response.members, s)
 	}
 	log.Println(response.members)
 
