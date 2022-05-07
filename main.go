@@ -21,7 +21,6 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	log.Println(str_body)
 
 	text := filter_text(str_body)
-	log.Println(text)
 
 	params := text_to_struct(text)
 	log.Println(params)
@@ -82,16 +81,13 @@ func text_to_struct(text string) Params {
 		s = strings.ReplaceAll(s, ">", "")
 		response.members = append(response.members, s)
 	}
-	log.Println(response.members)
 
 	// membersを削る
 	text = rep.ReplaceAllString(text, "")
 	text = strings.TrimSpace(text)
-	log.Println(text)
 
 	// 残りを半角文字で区切る
 	texts := strings.Split(text, " ")
-	log.Println(texts)
 
 	// TODO: エラーハンドリング
 	if num, err := strconv.Atoi(texts[0]); err == nil {
