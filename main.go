@@ -2,11 +2,11 @@ package main
 
 import (
 	"log"
+	"math/rand"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
-	"math/rand"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -32,7 +32,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       "ok",
+		Body:       strings.Join(selected, "\n"),
 	}, nil
 }
 
@@ -108,7 +108,7 @@ func select_by_count(params *Params) []string {
 	for i := 0; i < params.count; i++ {
 		rand.Seed(time.Now().UnixNano())
 		i := rand.Intn(len(params.members))
-		
+
 		selected = append(selected, params.members[i])
 		// 選ばれたものはmembersから削除する
 		params.members = append(params.members[:i], params.members[i+1:]...)
