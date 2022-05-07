@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 	"regexp"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -22,19 +23,8 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	text := filter_text(str_body)
 	log.Println(text)
 
-	// <>があったら中を取り出す
-	rep := regexp.MustCompile(`\<.*?\>`)
-	members := rep.FindAllStringSubmatch(text, -1)
-	log.Println(members)
-
-	// membersを削る
-	text = rep.ReplaceAllString(text, "")
-	text = strings.TrimSpace(text)
-	log.Println(text)
-
-	// 残りを半角文字で区切る
-	texts := strings.Split(text, " ")
-	log.Println(texts)
+	params := text_to_struct(text)
+	log.Println(params)
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
@@ -71,4 +61,39 @@ func select_map(f func(s *string) bool, strs []string) []string {
 		}
 	}
 	return res
+}
+
+// TODO: 場所を整理する
+var rep = regexp.MustCompile(`\<.*?\>`)
+
+type Params struct {
+	members []string
+	count int
+}
+
+func text_to_struct(text string) Params {
+	response := Params{members: make([]string, 0), count: 0}
+
+	// <>があったら中を取り出す
+	results := rep.FindAllStringSubmatch(text, -1)
+	for _, member := range results {
+		response.members = append(response.members, member[0])
+	}
+	log.Println(response.members)
+
+	// membersを削る
+	text = rep.ReplaceAllString(text, "")
+	text = strings.TrimSpace(text)
+	log.Println(text)
+
+	// 残りを半角文字で区切る
+	texts := strings.Split(text, " ")
+	log.Println(texts)
+
+	// TODO: エラーハンドリング
+	if num, err := strconv.Atoi(texts[0]); err == nil {
+		response.count = num
+	}
+
+	return response
 }
