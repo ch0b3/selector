@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/url"
 	"strings"
+	"regexp"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -20,6 +21,20 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	text := filter_text(str_body)
 	log.Println(text)
+
+	// <>があったら中を取り出す
+	rep := regexp.MustCompile(`\<.*?\>`)
+	members := rep.FindAllStringSubmatch(text, -1)
+	log.Println(members)
+
+	// membersを削る
+	text = rep.ReplaceAllString(text, "")
+	text = strings.TrimSpace(text)
+	log.Println(text)
+
+	// 残りを半角文字で区切る
+	texts := strings.Split(text, " ")
+	log.Println(texts)
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
