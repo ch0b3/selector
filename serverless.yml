@@ -36,6 +36,8 @@ package:
 functions:
   selector:
     handler: bin/main
+    environment:
+      SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     events:
       - http: 'POST /'
     # url: true

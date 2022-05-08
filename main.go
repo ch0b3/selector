@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 
+	"selector/auth"
 	"selector/filtering"
 	"selector/selection"
 
@@ -14,6 +15,13 @@ import (
 
 // Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	if auth.SecretsVerify(request.Body, request.Headers) != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: 200,
+			Body:       "認証情報に間違いがあります。",
+		}, nil
+	}
+
 	body, err := url.QueryUnescape(request.Body)
 	if err != nil {
 		log.Fatal(err)
