@@ -1,10 +1,10 @@
 package selection
 
 import (
-	"strings"
-	"strconv"
-	"regexp"
 	"math/rand"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
 
