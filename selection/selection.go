@@ -1,10 +1,10 @@
 package selection
 
 import (
-	"strings"
-	"strconv"
-	"regexp"
 	"math/rand"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -13,7 +13,7 @@ type Params struct {
 	count   int
 }
 
-var rep = regexp.MustCompile(`\<.*?\>`)
+var rep = regexp.MustCompile(`\[.*?\]`)
 
 func TextToStruct(text string) Params {
 	response := Params{members: make([]string, 0), count: 0}
@@ -22,8 +22,8 @@ func TextToStruct(text string) Params {
 	results := rep.FindAllStringSubmatch(text, -1)
 	for _, member := range results {
 		// <>を削除
-		s := strings.ReplaceAll(member[0], "<", "")
-		s = strings.ReplaceAll(s, ">", "")
+		s := strings.ReplaceAll(member[0], "[", "")
+		s = strings.ReplaceAll(s, "]", "")
 		response.members = append(response.members, s)
 	}
 

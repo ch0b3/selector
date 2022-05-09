@@ -1,9 +1,9 @@
 package auth
 
-import  (
-	"os"
+import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/slack-go/slack"
 )
@@ -23,9 +23,9 @@ func SecretsVerify(body string, headers map[string]string) error {
 }
 
 func convertHeaders(headers map[string]string) http.Header {
-    h := http.Header{}
-    for key, value := range headers {
-        h.Set(key, value)
-    }
-    return h
+	h := http.Header{}
+	for key, value := range headers {
+		h.Set(key, value)
+	}
+	return h
 }
