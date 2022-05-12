@@ -1,5 +1,16 @@
 # Selector
 
+## What is this
+
+This is a API for slack command.
+Returns specified count of members are randomly selected from among those specified in `[]` synchronously.
+
+## How to use
+
+```
+/selector [member1][member2][member3] 2
+```
+
 # Versions
 
 - Go: 1.18.1
