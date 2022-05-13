@@ -43,16 +43,25 @@ func TextToStruct(text string) Params {
 }
 
 func SelectByCount(params *Params) []string {
-	selected := make([]string, 0)
+	selectedMembers := make([]string, 0)
 
 	for i := 0; i < params.count; i++ {
 		rand.Seed(time.Now().UnixNano())
 		i := rand.Intn(len(params.members))
 
-		selected = append(selected, params.members[i])
+		selectedMember := formattingMember(params.members[i])
+		selectedMembers = append(selectedMembers, selectedMember)
 		// 選ばれたものはmembersから削除する
 		params.members = append(params.members[:i], params.members[i+1:]...)
 	}
 
-	return selected
+	return selectedMembers
+}
+
+func formattingMember(selectedMember string) string {
+	pattern := "@"
+	if strings.HasPrefix(selectedMember, pattern) {
+		selectedMember = "<" + selectedMember + ">"
+	}
+	return selectedMember
 }
