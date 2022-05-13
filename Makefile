@@ -1,10 +1,11 @@
 build:
+	gofmt -w .
 	GOOS=linux GOARCH=amd64 go build -o bin/main main.go
 
-deploy-dev:
+deploy-dev: build
 	sls deploy --verbose --stage dev
 
-deploy-prod:
+deploy-prod: build
 	sls deploy --verbose --stage prod
 
 invoke:
