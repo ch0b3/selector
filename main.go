@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/url"
 	"strings"
@@ -12,6 +13,11 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
+
+type ResponseBody struct {
+	ResponseType string `json:"response_type"`
+	Text         string `json:"text"`
+}
 
 // Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -37,9 +43,16 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	selected := selection.SelectByCount(&params)
 	log.Println(selected)
 
+	responseBody := ResponseBody{
+		ResponseType: "in_channel",
+		Text:         strings.Join(selected, "\n"),
+	}
+
+	jsonData, _ := json.Marshal(responseBody)
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       strings.Join(selected, "\n"),
+		Body:       string(jsonData),
 	}, nil
 }
 

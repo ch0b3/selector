@@ -11,7 +11,7 @@ Returns specified count of members are randomly selected from among those specif
 /selector [member1][member2][member3] 2
 ```
 
-# Versions
+## Versions
 
 - Go: 1.18.1
 - Serverless framework: 3.16.0
