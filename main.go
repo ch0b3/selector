@@ -35,7 +35,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	str_body := string(body)
 	log.Println(str_body)
 
-	text := filtering.Filter_text(str_body)
+	text := filtering.FilterText(str_body)
 
 	params := selection.TextToStruct(text)
 	log.Println(params)
