@@ -9,22 +9,22 @@ import (
 )
 
 type Params struct {
-	members []string
-	count   int
+	Members []string
+	Count   int
 }
 
 var rep = regexp.MustCompile(`\[.*?\]`)
 
 func TextToStruct(text string) Params {
-	response := Params{members: make([]string, 0), count: 0}
+	response := Params{Members: make([]string, 0), Count: 0}
 
-	// <>があったら中を取り出す
+	// []があったら中を取り出す
 	results := rep.FindAllStringSubmatch(text, -1)
 	for _, member := range results {
-		// <>を削除
+		// []を削除
 		s := strings.ReplaceAll(member[0], "[", "")
 		s = strings.ReplaceAll(s, "]", "")
-		response.members = append(response.members, s)
+		response.Members = append(response.Members, s)
 	}
 
 	// membersを削る
@@ -36,7 +36,7 @@ func TextToStruct(text string) Params {
 
 	// TODO: エラーハンドリング
 	if num, err := strconv.Atoi(texts[0]); err == nil {
-		response.count = num
+		response.Count = num
 	}
 
 	return response
@@ -45,14 +45,14 @@ func TextToStruct(text string) Params {
 func SelectByCount(params *Params) []string {
 	selectedMembers := make([]string, 0)
 
-	for i := 0; i < params.count; i++ {
+	for i := 0; i < params.Count; i++ {
 		rand.Seed(time.Now().UnixNano())
-		i := rand.Intn(len(params.members))
+		i := rand.Intn(len(params.Members))
 
-		selectedMember := formattingMember(params.members[i])
+		selectedMember := formattingMember(params.Members[i])
 		selectedMembers = append(selectedMembers, selectedMember)
-		// 選ばれたものはmembersから削除する
-		params.members = append(params.members[:i], params.members[i+1:]...)
+		// 選ばれたものはMembersから削除する
+		params.Members = append(params.Members[:i], params.Members[i+1:]...)
 	}
 
 	return selectedMembers
