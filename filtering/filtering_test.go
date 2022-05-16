@@ -13,4 +13,3 @@ func TestFilterText(t *testing.T) {
 		t.Errorf("Fail")
 	}
 }
-
