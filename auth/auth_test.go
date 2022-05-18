@@ -13,8 +13,19 @@ import (
 )
 
 func TestSecretsVerify(t *testing.T) {
+	test_body := "token=testtesttest"
+
+	test_signature := SetSignatures(test_body)
+	response := auth.SecretsVerify(test_body, test_signature)
+	if response != nil {
+		log.Fatal(response)
+		t.Errorf("Fail")
+	}
+}
+
+func SetSignatures(test_body string) map[string]string {
 	os.Setenv("SLACK_SIGNING_SECRET", "8f742231b10e8888abcd99yyyzzz85a5")
-	test_body := "token=testtesttesttest"
+
 	now := strconv.FormatInt(time.Now().Unix(), 10)
 
 	sig_basestring := "v0:" + now + ":" + test_body
@@ -23,11 +34,5 @@ func TestSecretsVerify(t *testing.T) {
 	mac.Write([]byte(sig_basestring))
 	signature := hex.EncodeToString(mac.Sum(nil))
 
-	test_signature := map[string]string{"X-Slack-Signature": "v0=" + signature, "X-Slack-Request-Timestamp": now}
-
-	response := auth.SecretsVerify(test_body, test_signature)
-	if response != nil {
-		log.Fatal(response)
-		t.Errorf("Fail")
-	}
+	return map[string]string{"X-Slack-Signature": "v0=" + signature, "X-Slack-Request-Timestamp": now}
 }
