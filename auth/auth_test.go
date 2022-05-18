@@ -1,4 +1,4 @@
-package auth_test
+package auth
 
 import (
 	"crypto/hmac"
@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"log"
 	"os"
-	"selector/auth"
 	"strconv"
 	"testing"
 	"time"
@@ -16,7 +15,7 @@ func TestSecretsVerify(t *testing.T) {
 	test_body := "token=testtesttest"
 
 	test_signature := SetSignatures(test_body)
-	response := auth.SecretsVerify(test_body, test_signature)
+	response := SecretsVerify(test_body, test_signature)
 	if response != nil {
 		log.Fatal(response)
 		t.Errorf("Fail")
