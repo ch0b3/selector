@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-lambda-go/events"
-	"selector/auth/dummy"
+	"github.com/ch0b3/selector/auth/dummy"
 	"testing"
 )
 
