@@ -1,6 +1,6 @@
 build:
 	gofmt -w .
-	GOOS=linux GOARCH=amd64 go build -o bin/main main.go
+	GOOS=linux GOARCH=amd64 go build -o bin/main main/main.go
 
 deploy-dev: build
 	sls deploy --verbose --stage dev
