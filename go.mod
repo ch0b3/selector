@@ -1,4 +1,4 @@
-module selector
+module github.com/ch0b3/selector
 
 go 1.18
 

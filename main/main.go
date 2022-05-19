@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"strings"
 
-	"selector/auth"
-	"selector/filtering"
-	"selector/selection"
+	"github.com/ch0b3/selector/auth"
+	"github.com/ch0b3/selector/filtering"
+	"github.com/ch0b3/selector/selection"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"

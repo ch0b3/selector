@@ -1,8 +1,8 @@
 package selection_test
 
 import (
+	"github.com/ch0b3/selector/selection"
 	"reflect"
-	"selector/selection"
 	"testing"
 )
 

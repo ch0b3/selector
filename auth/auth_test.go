@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"github.com/ch0b3/selector/auth/dummy"
 	"log"
-	"selector/auth/dummy"
 	"testing"
 )
 
