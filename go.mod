@@ -6,4 +6,7 @@ require github.com/aws/aws-lambda-go v1.31.1
 
 require github.com/gorilla/websocket v1.4.2 // indirect
 
-require github.com/slack-go/slack v0.10.3
+require (
+	github.com/deckarep/golang-set v1.8.0
+	github.com/slack-go/slack v0.10.3
+)
