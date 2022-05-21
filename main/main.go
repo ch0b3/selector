@@ -27,7 +27,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	body, err := url.QueryUnescape(request.Body)
 	if err != nil {
-		log.Fatal(err)
+		return buildResponse("処理が失敗しました。", err)
 	}
 	str_body := string(body)
 	log.Println(str_body)
@@ -47,17 +47,17 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		ResponseType: "in_channel",
 		Text:         strings.Join(selected, "\n"),
 	}
-
 	jsonData, _ := json.Marshal(responseBody)
 
 	return buildResponse(string(jsonData), nil)
 }
 
 func buildResponse(messageBody string, err error) (events.APIGatewayProxyResponse, error) {
+	log.Println(err)
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Body:       messageBody,
-	}, err
+	}, nil
 }
 
 func main() {
