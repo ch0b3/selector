@@ -21,11 +21,8 @@ type ResponseBody struct {
 
 // Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	if auth.SecretsVerify(request.Body, request.Headers) != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: 200,
-			Body:       "認証情報に間違いがあります。",
-		}, nil
+	if err := auth.SecretsVerify(request.Body, request.Headers); err != nil {
+		return buildResponse("認証情報に間違いがあります。", err)
 	}
 
 	body, err := url.QueryUnescape(request.Body)
@@ -50,10 +47,14 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	jsonData, _ := json.Marshal(responseBody)
 
+	return buildResponse(string(jsonData), nil)
+}
+
+func buildResponse(messageBody string, err error) (events.APIGatewayProxyResponse, error) {
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       string(jsonData),
-	}, nil
+		Body:       messageBody,
+	}, err
 }
 
 func main() {
