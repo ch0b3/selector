@@ -34,7 +34,10 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	text := filtering.FilterText(str_body)
 
-	params := selection.TextToStruct(text)
+	params, err := selection.TextToStruct(text)
+	if err != nil {
+		return buildResponse("処理が失敗しました。", err)
+	}
 	log.Println(params)
 
 	selected := selection.SelectByCount(&params)
