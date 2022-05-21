@@ -5,7 +5,7 @@ import "strings"
 // bodyからテキストを抽出する
 func FilterText(base_str string) string {
 	params := strings.Split(base_str, "&")
-	prefix_func := func(str *string) bool {
+	prefixFunc := func(str *string) bool {
 		pattern := "text="
 		answer := strings.HasPrefix(*str, pattern)
 		if answer {
@@ -13,7 +13,7 @@ func FilterText(base_str string) string {
 		}
 		return answer
 	}
-	texts := selectMap(prefix_func, params)
+	texts := selectMap(prefixFunc, params)
 	text := texts[0]
 	return text
 }

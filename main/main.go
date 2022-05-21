@@ -21,23 +21,23 @@ type ResponseBody struct {
 
 // Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	if auth.SecretsVerify(request.Body, request.Headers) != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: 200,
-			Body:       "認証情報に間違いがあります。",
-		}, nil
+	if err := auth.SecretsVerify(request.Body, request.Headers); err != nil {
+		return buildResponse("認証情報に間違いがあります。", err)
 	}
 
 	body, err := url.QueryUnescape(request.Body)
 	if err != nil {
-		log.Fatal(err)
+		return buildResponse("処理が失敗しました。", err)
 	}
 	str_body := string(body)
 	log.Println(str_body)
 
 	text := filtering.FilterText(str_body)
 
-	params := selection.TextToStruct(text)
+	params, err := selection.TextToStruct(text)
+	if err != nil {
+		return buildResponse("処理が失敗しました。", err)
+	}
 	log.Println(params)
 
 	selected := selection.SelectByCount(&params)
@@ -47,12 +47,16 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		ResponseType: "in_channel",
 		Text:         strings.Join(selected, "\n"),
 	}
-
 	jsonData, _ := json.Marshal(responseBody)
 
+	return buildResponse(string(jsonData), nil)
+}
+
+func buildResponse(messageBody string, err error) (events.APIGatewayProxyResponse, error) {
+	log.Println(err)
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       string(jsonData),
+		Body:       messageBody,
 	}, nil
 }
 

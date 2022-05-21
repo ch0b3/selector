@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 	"os"
 
@@ -13,7 +12,6 @@ func SecretsVerify(body string, headers map[string]string) error {
 
 	verifier, err := slack.NewSecretsVerifier(httpHeaders, os.Getenv("SLACK_SIGNING_SECRET"))
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 

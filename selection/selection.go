@@ -15,7 +15,7 @@ type Params struct {
 
 var rep = regexp.MustCompile(`\[.*?\]`)
 
-func TextToStruct(text string) Params {
+func TextToStruct(text string) (Params, error) {
 	response := Params{Members: make([]string, 0), Count: 0}
 
 	// []があったら中を取り出す
@@ -34,12 +34,13 @@ func TextToStruct(text string) Params {
 	// 残りを半角文字で区切る
 	texts := strings.Split(text, " ")
 
-	// TODO: エラーハンドリング
 	if num, err := strconv.Atoi(texts[0]); err == nil {
 		response.Count = num
+	} else {
+		return Params{}, err
 	}
 
-	return response
+	return response, nil
 }
 
 func SelectByCount(params *Params) []string {
