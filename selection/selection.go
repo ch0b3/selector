@@ -11,12 +11,13 @@ import (
 type Params struct {
 	Members []string
 	Count   int
+	Mode string
 }
 
 var rep = regexp.MustCompile(`\[.*?\]`)
 
 func TextToStruct(text string) (Params, error) {
-	response := Params{Members: make([]string, 0), Count: 0}
+	response := Params{Members: make([]string, 0), Count: 0, Mode: "default"}
 
 	// []があったら中を取り出す
 	results := rep.FindAllStringSubmatch(text, -1)
@@ -33,6 +34,12 @@ func TextToStruct(text string) (Params, error) {
 
 	// 残りを半角文字で区切る
 	texts := strings.Split(text, " ")
+
+	for _, text := range texts {
+		if text == "--split" {
+			response.Mode = "split"
+		}
+	}
 
 	if num, err := strconv.Atoi(texts[0]); err == nil {
 		response.Count = num
