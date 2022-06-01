@@ -20,6 +20,7 @@ type ResponseBody struct {
 }
 
 // Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
+// Reference: https://github.com/aws/aws-lambda-go/blob/main/events/README_ApiGatewayEvent.md
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if err := auth.SecretsVerify(request.Body, request.Headers); err != nil {
 		return buildResponse("認証情報に間違いがあります。", err)
