@@ -14,6 +14,11 @@ type Params struct {
 	Mode string
 }
 
+type Room struct {
+	Members []string
+	Count int
+}
+
 var rep = regexp.MustCompile(`\[.*?\]`)
 
 func TextToStruct(text string) (Params, error) {
@@ -50,20 +55,33 @@ func TextToStruct(text string) (Params, error) {
 	return response, nil
 }
 
-func SelectByCount(params *Params) []string {
-	selectedMembers := make([]string, 0)
+func SelectMembersByMode(params *Params) []*Room {
+	rooms := make([]*Room, 0)
 
-	for i := 0; i < params.Count; i++ {
-		rand.Seed(time.Now().UnixNano())
-		i := rand.Intn(len(params.Members))
-
-		selectedMember := formattingMember(params.Members[i])
-		selectedMembers = append(selectedMembers, selectedMember)
-		// 選ばれたものはMembersから削除する
-		params.Members = append(params.Members[:i], params.Members[i+1:]...)
+	if params.Mode == "split" {
+		// params.Members / params.Count
+		// (商+1)人のroom * 余りの数 と (商)人のroom * (count - 余りの数)
+	} else {
+		room := Room{Members: make([]string, 0), Count: params.Count}
+		rooms = append(rooms, &room)
+		SelectByCount(&room, params.Members)
 	}
 
-	return selectedMembers
+	return rooms
+}
+
+func SelectByCount(room *Room, candidates []string) []string {
+	for i := 0; i < room.Count; i++ {
+		rand.Seed(time.Now().UnixNano())
+		i := rand.Intn(len(candidates))
+
+		selectedMember := formattingMember(candidates[i])
+		room.Members = append(room.Members, selectedMember)
+		// 選ばれたものはMembersから削除する
+		candidates = append(candidates[:i], candidates[i+1:]...)
+	}
+
+	return candidates
 }
 
 func formattingMember(selectedMember string) string {
