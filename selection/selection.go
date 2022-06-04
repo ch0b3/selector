@@ -11,12 +11,12 @@ import (
 type Params struct {
 	Members []string
 	Count   int
-	Mode string
+	Mode    string
 }
 
 type Room struct {
 	Members []string
-	Count int
+	Count   int
 }
 
 var rep = regexp.MustCompile(`\[.*?\]`)
@@ -70,7 +70,7 @@ func SelectMembersByMode(params *Params) []*Room {
 	return rooms
 }
 
-func SelectByCount(room *Room, candidates []string) []string {
+func SelectByCount(room *Room, candidates []string) (*Room, []string) {
 	for i := 0; i < room.Count; i++ {
 		rand.Seed(time.Now().UnixNano())
 		i := rand.Intn(len(candidates))
@@ -81,7 +81,7 @@ func SelectByCount(room *Room, candidates []string) []string {
 		candidates = append(candidates[:i], candidates[i+1:]...)
 	}
 
-	return candidates
+	return room, candidates
 }
 
 func formattingMember(selectedMember string) string {
