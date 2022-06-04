@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/ch0b3/selector/auth"
@@ -41,12 +42,12 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	log.Println(params)
 
-	selected := selection.SelectByCount(&params)
-	log.Println(selected)
+	rooms := selection.SelectMembersByMode(&params)
+	log.Println(rooms)
 
 	responseBody := ResponseBody{
 		ResponseType: "in_channel",
-		Text:         strings.Join(selected, "\n"),
+		Text:         serializeRooms(rooms),
 	}
 	jsonData, _ := json.Marshal(responseBody)
 
@@ -59,6 +60,21 @@ func buildResponse(messageBody string, err error) (events.APIGatewayProxyRespons
 		StatusCode: 200,
 		Body:       messageBody,
 	}, nil
+}
+
+func serializeRooms(rooms []*selection.Room) string {
+	result := ""
+
+	length := len(rooms)
+	for idx, room := range rooms {
+		roomStrings := []string{strconv.Itoa(idx + 1), "\n", strings.Join(room.Members, "\n")}
+		result += strings.Join(roomStrings, "")
+		if length != idx+1 {
+			result += "\n"
+		}
+	}
+
+	return result
 }
 
 func main() {
