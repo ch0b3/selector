@@ -10,7 +10,7 @@ import (
 func TestTextToStruct(t *testing.T) {
 	text := "[member1][member2] 1"
 	got, err := selection.TextToStruct(text)
-	want := selection.Params{Members: []string{"member1", "member2"}, Count: 1}
+	want := selection.Params{Members: []string{"member1", "member2"}, Count: 1, Mode: "default"}
 
 	if err != nil {
 		t.Errorf("Fail")
