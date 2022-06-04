@@ -21,6 +21,20 @@ func TestTextToStruct(t *testing.T) {
 	}
 }
 
+func TestSelectMembersByMode(t *testing.T) {
+	// defaultパターン
+	params := selection.Params{Members: []string{"member1", "member2"}, Count: 1, Mode: "default"}
+	rooms := selection.SelectMembersByMode(&params)
+
+	if len(rooms[0].Members) != 1 {
+		t.Errorf("Fail")
+	}
+
+	if rooms[0].Count != 1 {
+		t.Errorf("Fail")
+	}
+}
+
 func TestSelectByCount(t *testing.T) {
 	members := []string{"member1", "member2", "member3"}
 	count := 2
