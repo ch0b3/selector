@@ -30,11 +30,12 @@ func TestSelectByCount(t *testing.T) {
 		inputInterfaces = append(inputInterfaces, m)
 	}
 
-	params := selection.Params{Members: members, Count: count}
-	gotMembers := selection.SelectByCount(&params)
+	room := selection.Room{Members: make([]string, 0), Count: count}
+	candidates := members
+	afterRoom, remainingCandidates := selection.SelectByCount(&room, candidates)
 
 	gotInterfaces := []interface{}{}
-	for _, m := range gotMembers {
+	for _, m := range afterRoom.Members {
 		gotInterfaces = append(gotInterfaces, m)
 	}
 
@@ -43,6 +44,11 @@ func TestSelectByCount(t *testing.T) {
 
 	// inputとgotの積集合の数がcountになっていればOK
 	if paramsSet.Intersect(gotSet).Cardinality() != count {
+		t.Errorf("Fail")
+	}
+
+	// 与えたcandidatesの数からcountが引かれていればOK
+	if len(remainingCandidates) != (len(members) - count) {
 		t.Errorf("Fail")
 	}
 }
