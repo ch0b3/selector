@@ -35,7 +35,8 @@ func TestHandler(t *testing.T) {
 	}
 
 	for _, m := range gotMembers {
-		if m != "member1" && m != "member2" && m != "member3" {
+		if m != "member1" && m != "member2" && m != "member3" && m != "1" {
+			t.Error(gotMembers)
 			t.Errorf("Fail")
 		}
 	}
