@@ -60,6 +60,13 @@ func SelectMembersByMode(params *Params) []*Room {
 
 	if params.Mode == "split" {
 		// params.Members / params.Count
+		quotient := len(params.Members) / params.Count
+		remainder := len(params.Members) % params.Count
+
+		var rooms []Room
+		room := Room{Members: make([]string, 0), Count: (quotient + 1)}
+		// rooms = append(rooms, )
+		
 		// (商+1)人のroom * 余りの数 と (商)人のroom * (count - 余りの数)
 	} else {
 		room := Room{Members: make([]string, 0), Count: params.Count}
