@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 )
 
 type Params struct {
@@ -64,14 +63,16 @@ func SelectMembersByMode(params *Params) []*Room {
 		remainder := len(params.Members) % params.Count
 
 		// (商+1)人のroom * 余りの数 と (商)人のroom * (商 - 余りの数)
-		var rooms []Room
-
 		for i := 0; i < remainder; i++ {
-			rooms = append(rooms, Room{Count: remainder})
+			rooms = append(rooms, &Room{Count: (quotient + 1)})
 		}
-		
+
 		for i := 0; i < (quotient - remainder); i++ {
-			rooms = append(rooms, Room{Count: quotient})
+			rooms = append(rooms, &Room{Count: quotient})
+		}
+
+		for _, room := range rooms {
+			SelectByCount(room, params.Members)
 		}
 	} else {
 		room := Room{Members: make([]string, 0), Count: params.Count}

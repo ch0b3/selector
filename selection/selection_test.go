@@ -33,6 +33,30 @@ func TestSelectMembersByMode(t *testing.T) {
 	if rooms[0].Count != 1 {
 		t.Errorf("Fail")
 	}
+
+	// splitパターン
+	params = selection.Params{Members: []string{"member1", "member2", "member3", "member4", "member5"}, Count: 2, Mode: "split"}
+	rooms = selection.SelectMembersByMode(&params)
+
+	if len(rooms) != 2 {
+		t.Errorf("Fail")
+	}
+
+	if len(rooms[0].Members) != 3 {
+		t.Errorf("Fail")
+	}
+
+	if rooms[0].Count != 3 {
+		t.Errorf("Fail")
+	}
+
+	if len(rooms[1].Members) != 2 {
+		t.Errorf("Fail")
+	}
+
+	if rooms[1].Count != 2 {
+		t.Errorf("Fail")
+	}
 }
 
 func TestSelectByCount(t *testing.T) {
