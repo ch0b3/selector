@@ -11,12 +11,18 @@ import (
 type Params struct {
 	Members []string
 	Count   int
+	Mode    string
+}
+
+type Room struct {
+	Members []string
+	Count   int
 }
 
 var rep = regexp.MustCompile(`\[.*?\]`)
 
 func TextToStruct(text string) (Params, error) {
-	response := Params{Members: make([]string, 0), Count: 0}
+	response := Params{Members: make([]string, 0), Count: 0, Mode: "default"}
 
 	// []があったら中を取り出す
 	results := rep.FindAllStringSubmatch(text, -1)
@@ -34,6 +40,12 @@ func TextToStruct(text string) (Params, error) {
 	// 残りを半角文字で区切る
 	texts := strings.Split(text, " ")
 
+	for _, text := range texts {
+		if text == "--split" {
+			response.Mode = "split"
+		}
+	}
+
 	if num, err := strconv.Atoi(texts[0]); err == nil {
 		response.Count = num
 	} else {
@@ -43,20 +55,46 @@ func TextToStruct(text string) (Params, error) {
 	return response, nil
 }
 
-func SelectByCount(params *Params) []string {
-	selectedMembers := make([]string, 0)
+func SelectMembersByMode(params *Params) []*Room {
+	rooms := make([]*Room, 0)
 
-	for i := 0; i < params.Count; i++ {
-		rand.Seed(time.Now().UnixNano())
-		i := rand.Intn(len(params.Members))
+	if params.Mode == "split" {
+		quotient := len(params.Members) / params.Count
+		remainder := len(params.Members) % params.Count
 
-		selectedMember := formattingMember(params.Members[i])
-		selectedMembers = append(selectedMembers, selectedMember)
-		// 選ばれたものはMembersから削除する
-		params.Members = append(params.Members[:i], params.Members[i+1:]...)
+		// (商+1)人のroom * 余りの数 と (商)人のroom * (商 - 余りの数)
+		for i := 0; i < remainder; i++ {
+			rooms = append(rooms, &Room{Count: (quotient + 1)})
+		}
+
+		for i := 0; i < (quotient - remainder); i++ {
+			rooms = append(rooms, &Room{Count: quotient})
+		}
+
+		for _, room := range rooms {
+			SelectByCount(room, params.Members)
+		}
+	} else {
+		room := Room{Members: make([]string, 0), Count: params.Count}
+		rooms = append(rooms, &room)
+		SelectByCount(&room, params.Members)
 	}
 
-	return selectedMembers
+	return rooms
+}
+
+func SelectByCount(room *Room, candidates []string) (*Room, []string) {
+	for i := 0; i < room.Count; i++ {
+		rand.Seed(time.Now().UnixNano())
+		i := rand.Intn(len(candidates))
+
+		selectedMember := formattingMember(candidates[i])
+		room.Members = append(room.Members, selectedMember)
+		// 選ばれたものはMembersから削除する
+		candidates = append(candidates[:i], candidates[i+1:]...)
+	}
+
+	return room, candidates
 }
 
 func formattingMember(selectedMember string) string {
