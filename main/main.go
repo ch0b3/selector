@@ -67,10 +67,10 @@ func serializeRooms(rooms []*selection.Room) string {
 
 	length := len(rooms)
 	for idx, room := range rooms {
-		roomStrings := []string{strconv.Itoa(idx + 1), "\n", strings.Join(room.Members, "\n")}
+		roomStrings := []string{"*", strconv.Itoa(idx + 1), ".*\n", strings.Join(room.Members, "\n")}
 		result += strings.Join(roomStrings, "")
 		if length != idx+1 {
-			result += "\n"
+			result += "\r\n"
 		}
 	}
 
