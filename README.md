@@ -2,13 +2,52 @@
 
 ## What is this
 
-This is a API for slack command.
-Returns specified count of members are randomly selected from among those specified in `[]` synchronously.
+These codes are for slack command.  
+Returns specified count of members are randomly selected from among those specified in `[]` synchronously.  
+
+Example)  
+This API can select one among five people.  
+or  
+This API can divide five people into two groups.
 
 ## How to use
 
+### Default mode
+Use like below when you want to select specified count members among multiple members
+
 ```
-/selector [member1][member2][member3] 2
+/selector [member1][member2][member3] <count>
+```
+
+ex)
+```
+/selector [hoge][fuga][takashi] 2
+
+--response--
+1.
+fuga
+takashi
+```
+
+### Split mode
+Use like below when you want to divide multiple members into specified count groups
+
+```
+/selector [member1][member2][member3] <count> --split
+```
+
+ex)
+```
+/selector [hoge][fuga][takashi][ken][jun] 2 --split
+
+--response--
+1.
+hoge
+jun
+takashi
+2.
+ken
+fuga
 ```
 
 ## Versions
