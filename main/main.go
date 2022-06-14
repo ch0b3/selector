@@ -17,7 +17,17 @@ import (
 
 type ResponseBody struct {
 	ResponseType string `json:"response_type"`
-	Text         string `json:"text"`
+	Blocks       []Block
+}
+
+type Block struct {
+	Type   string `json:"type"`
+	Fields []Field
+}
+
+type Field struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
 }
 
 // Reference: https://github.com/aws/aws-lambda-go/blob/main/events/lambda_function_urls.go
@@ -47,7 +57,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	responseBody := ResponseBody{
 		ResponseType: "in_channel",
-		Text:         serializeRooms(rooms),
+		Blocks:       serializeRooms(rooms),
 	}
 	jsonData, _ := json.Marshal(responseBody)
 
@@ -62,19 +72,21 @@ func buildResponse(messageBody string, err error) (events.APIGatewayProxyRespons
 	}, nil
 }
 
-func serializeRooms(rooms []*selection.Room) string {
-	result := ""
+func serializeRooms(rooms []*selection.Room) []Block {
+	var text string
+	var blocks []Block
 
-	length := len(rooms)
 	for idx, room := range rooms {
+		text = ""
 		roomStrings := []string{"*", strconv.Itoa(idx + 1), ".*\n", strings.Join(room.Members, "\n")}
-		result += strings.Join(roomStrings, "")
-		if length != idx+1 {
-			result += "\r\n"
-		}
+		text += strings.Join(roomStrings, "")
+
+		var fields []Field
+		fields = append(fields, Field{Type: "mrkdwn", Text: text})
+		blocks = append(blocks, Block{Type: "section", Fields: fields})
 	}
 
-	return result
+	return blocks
 }
 
 func main() {

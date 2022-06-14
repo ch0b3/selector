@@ -20,6 +20,7 @@ functions:
       SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     events:
       - http: 'POST /'
+    # TODO: Use lambda function urls
     # url: true
 
 plugins:
